@@ -1,0 +1,2 @@
+INSERT INTO role (nome) VALUES ('PESSOA');
+INSERT INTO role (nome) VALUES ('CRECHE');
