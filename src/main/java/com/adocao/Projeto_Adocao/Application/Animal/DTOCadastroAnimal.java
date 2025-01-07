@@ -27,7 +27,5 @@ public record DTOCadastroAnimal(
         Boolean castracao,
 
         @NotBlank
-        List<String> vacinas // Peso, altura, vacinas e vermifugação na descrição
-
-
+        String descricao // Peso, altura, vacinas e vermifugação na descrição
         ) { }

@@ -1,11 +1,12 @@
 -- Criar o Usuário
-INSERT INTO usuario (ativo, nome, identificador, email, senha, telefone, saldo)
+INSERT INTO usuario (ativo, nome, identificador, tipo, email, senha, telefone, saldo)
 VALUES (
     TRUE,
     'Admin User',
     '00000000000', -- Identificador fictício (CPF)
+    'P',
     'admin@example.com',
-    'admin', -- Senha não criptografada (ideal seria usar uma senha hash)
+    '$2a$12$IyiwLJI0G35zHjitr/TvreSblHtB2AIxNq/LZvq2MsHoGTSinyUWS',
     '123456789',
     0.00
 );

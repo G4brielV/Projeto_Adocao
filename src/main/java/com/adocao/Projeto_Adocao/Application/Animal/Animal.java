@@ -25,26 +25,22 @@ public class Animal {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private boolean ativo;
-
+    private Boolean ativo = true;
     private String nome;
     private String especie;
     private String cor;
 
     @Enumerated(EnumType.STRING) // Identifica para o JPA, que é um ENUM de STRING
     private Porte porte;
-
     private LocalDate nascimento;
-
     private Boolean castracao;
+    private String descricao; // Descrição: vacina, vermifugação, peso, altura a critério de quem colocou para adoção
 
-    private List<String> descricao; // Descrição: vacina, vermifugação, peso, altura a critério de quem colocou para adoção
 
 
-//    private String observações; ou fica fora da tabela? devo receber isso?
 
-    // Construtor da class --> está sendo usado pelo AnimalController
+
+    // Construtor da class --> está sendo usado pelo AnimalService
     public Animal(DTOCadastroAnimal dados) {
         this.ativo = true;
         this.nome = dados.nome();
@@ -53,7 +49,7 @@ public class Animal {
         this.porte= dados.porte();
         this.nascimento = dados.nascimento();
 
-        this.descricao = dados.vacinas();
+        this.descricao = dados.descricao();
 
     }
 
