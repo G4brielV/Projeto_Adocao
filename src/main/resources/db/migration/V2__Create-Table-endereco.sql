@@ -8,6 +8,6 @@ CREATE TABLE endereco (
     estado VARCHAR(2),
     latitude NUMERIC(10, 8),
     longitude NUMERIC(11, 8),
-    usuario_id INT NOT NULL, -- Um usuário pode ter mais de um endereço
+    usuario_id INT NOT NULL, -- Um usuário não pode ter mais de um endereço
     FOREIGN KEY (usuario_id) REFERENCES usuario (id) ON DELETE CASCADE
 );
