@@ -8,6 +8,6 @@ CREATE TABLE animal (
     nascimento DATE,
     castracao BOOLEAN,
     descricao TEXT,
-    dono_id INT NOT NULL, -- Referência ao usuario que cadastrou o animal
-    FOREIGN KEY (dono_id) REFERENCES usuario (id)
+    usuario_id INT NOT NULL, -- Referência ao usuario que cadastrou o animal
+    FOREIGN KEY (usuario_id) REFERENCES usuario (id)
 );
