@@ -6,6 +6,4 @@ CREATE TABLE endereco (
     bairro VARCHAR(255),
     cidade VARCHAR(255),
     estado VARCHAR(2),
-    latitude NUMERIC(10, 8),
-    longitude NUMERIC(11, 8)
 );
