@@ -39,7 +39,6 @@ public class SecurityConfiguration {
                 .build();
     }
 
-    // Usado no UsuarioController
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception{
         return configuration.getAuthenticationManager();

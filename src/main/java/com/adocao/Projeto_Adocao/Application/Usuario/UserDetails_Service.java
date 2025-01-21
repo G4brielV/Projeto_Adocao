@@ -17,5 +17,9 @@ public class UserDetails_Service implements UserDetailsService {
         return usuarioRepository.findByIdentificador(identificador);
     }
 
+    public UserDetails loadUserById(String id) throws UsernameNotFoundException {
+        return usuarioRepository.findById(Long.valueOf(id))
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado com o ID: " + id));
+    }
 
 }

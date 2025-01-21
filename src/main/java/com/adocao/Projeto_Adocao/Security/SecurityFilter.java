@@ -1,6 +1,8 @@
 package com.adocao.Projeto_Adocao.Security;
 
+import com.adocao.Projeto_Adocao.Application.Usuario.UserDetails_Service;
 import com.adocao.Projeto_Adocao.Application.Usuario.UsuarioRepository;
+import com.adocao.Projeto_Adocao.Application.Usuario.UsuarioService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,6 +24,9 @@ public class SecurityFilter extends OncePerRequestFilter {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private UserDetails_Service userDetails_service;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
@@ -32,7 +37,7 @@ public class SecurityFilter extends OncePerRequestFilter {
         // Valida se é nulo
         if (JWTToken != null) {
             var subject = tokenJWTService.getSubject(JWTToken);
-            var usuario = usuarioRepository.findByIdentificador(subject); // Pegando o Usuario/Login pelo "id" enviado no subject do Token
+            var usuario = userDetails_service.loadUserById(subject); // Pegando o Usuario/Login pelo "id" enviado no subject do Token
 
             var authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
 

@@ -24,7 +24,7 @@ public class TokenJWTService {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             return JWT.create()
                     .withIssuer("Projeto_Adocao")
-                    .withSubject(usuario.getIdentificador())
+                    .withSubject(String.valueOf(usuario.getId()))
                     .withExpiresAt(dataExpiracao())
                     .sign(algorithm);
         } catch (JWTCreationException exception) {
