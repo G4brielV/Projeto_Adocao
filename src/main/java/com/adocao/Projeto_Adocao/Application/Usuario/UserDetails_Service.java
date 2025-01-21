@@ -16,4 +16,6 @@ public class UserDetails_Service implements UserDetailsService {
     public UserDetails loadUserByUsername(String identificador) throws UsernameNotFoundException {
         return usuarioRepository.findByIdentificador(identificador);
     }
+
+
 }

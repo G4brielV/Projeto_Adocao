@@ -13,7 +13,7 @@ public record DTOCadastroAnimal(
         String nome,
 
         @NotBlank
-        String especie,
+        String raca,
 
         @NotBlank
         String cor,

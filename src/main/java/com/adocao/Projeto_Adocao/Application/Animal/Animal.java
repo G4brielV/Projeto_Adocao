@@ -27,7 +27,7 @@ public class Animal {
     private Long id;
     private Boolean ativo = true;
     private String nome;
-    private String especie;
+    private String raca;
     private String cor;
 
     @Enumerated(EnumType.STRING) // Identifica para o JPA, que é um ENUM de STRING
@@ -44,7 +44,7 @@ public class Animal {
     public Animal(DTOCadastroAnimal dados) {
         this.ativo = true;
         this.nome = dados.nome();
-        this.especie = dados.especie();
+        this.raca = dados.raca();
         this.cor = dados.cor();
         this.porte= dados.porte();
         this.nascimento = dados.nascimento();
