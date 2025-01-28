@@ -1,5 +1,6 @@
 package com.adocao.Projeto_Adocao.Application.Usuario;
 
+import com.adocao.Projeto_Adocao.Application.Endereco.Endereco;
 import com.adocao.Projeto_Adocao.Security.Roles.Role;
 import jakarta.persistence.*;
 
@@ -35,6 +36,10 @@ public class Usuario implements UserDetails {
 
     private String telefone;
     private BigInteger saldo;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "endereco_id", referencedColumnName = "id", unique = true)
+    private Endereco endereco;
 
     // Controle de acesso do perfil
     @ManyToMany(fetch = FetchType.EAGER)

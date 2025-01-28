@@ -22,10 +22,8 @@ public class SecurityFilter extends OncePerRequestFilter {
     private TokenJWTService tokenJWTService;
 
     @Autowired
-    private UsuarioRepository usuarioRepository;
-
-    @Autowired
     private UserDetails_Service userDetails_service;
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,

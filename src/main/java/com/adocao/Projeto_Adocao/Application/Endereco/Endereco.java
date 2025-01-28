@@ -2,10 +2,9 @@ package com.adocao.Projeto_Adocao.Application.Endereco;
 
 
 import com.adocao.Projeto_Adocao.Application.Usuario.DTOCadastroUsuario;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.adocao.Projeto_Adocao.Application.Usuario.Usuario;
+import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import lombok.*;
 
 @Table(name="endereco")
@@ -18,7 +17,7 @@ import lombok.*;
 public class Endereco {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Boolean ativo = true;
@@ -28,6 +27,9 @@ public class Endereco {
     private String cidade;
     private String estado;
 
+    @OneToOne(mappedBy = "endereco")
+    private Usuario usuario;
+
     // Construtor da class
     public Endereco(DTOCadastroEndereco dtoCadastroEndereco){
         this.rua = dtoCadastroEndereco.rua();
@@ -35,6 +37,14 @@ public class Endereco {
         this.bairro = dtoCadastroEndereco.bairro();
         this.cidade = dtoCadastroEndereco.cidade();
         this.estado = dtoCadastroEndereco.estado();
+    }
+
+    public void atualizarInformacoes(@Valid DTOAlterarEndereco novosDados){
+        this.rua = novosDados.rua();
+        this.numero = novosDados.numero();
+        this.bairro = novosDados.bairro();
+        this.cidade = novosDados.cidade();
+        this.estado = novosDados.estado();
     }
 
 }

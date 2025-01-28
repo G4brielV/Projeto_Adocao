@@ -5,7 +5,10 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -40,6 +43,7 @@ public class TokenJWTService {
                 .toInstant(ZoneOffset.of("-03:00"));
     }
 
+    // Usado no SecurityFilter, para validar o login do token
     public String getSubject(String TokenJWT){
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
