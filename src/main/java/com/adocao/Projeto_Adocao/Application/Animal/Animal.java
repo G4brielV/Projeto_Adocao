@@ -1,6 +1,8 @@
 package com.adocao.Projeto_Adocao.Application.Animal;
 
 
+import com.adocao.Projeto_Adocao.Application.Endereco.DTOEditarEndereco;
+import com.adocao.Projeto_Adocao.Application.Usuario.Usuario;
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -33,24 +35,41 @@ public class Animal {
     @Enumerated(EnumType.STRING) // Identifica para o JPA, que é um ENUM de STRING
     private Porte porte;
     private LocalDate nascimento;
-    private Boolean castracao;
+    private Boolean castracao = false;
+
+    @Column(columnDefinition = "TEXT")
     private String descricao; // Descrição: vacina, vermifugação, peso, altura a critério de quem colocou para adoção
 
 
+    // Relacionamento com Usuario (muitos animais para um usuário)
+    @ManyToOne
+    @JoinColumn(name = "usuario_id", nullable = false) // Coluna usuario_id na tabela animal
+    private Usuario usuario;
 
 
 
     // Construtor da class --> está sendo usado pelo AnimalService
-    public Animal(DTOCadastroAnimal dados) {
+    public Animal(DTOCadastroAnimal dtoCadastroAnimal) {
         this.ativo = true;
-        this.nome = dados.nome();
-        this.raca = dados.raca();
-        this.cor = dados.cor();
-        this.porte= dados.porte();
-        this.nascimento = dados.nascimento();
+        this.nome = dtoCadastroAnimal.nome();
+        this.raca = dtoCadastroAnimal.raca();
+        this.cor = dtoCadastroAnimal.cor();
+        this.porte= dtoCadastroAnimal.porte();
+        this.nascimento = dtoCadastroAnimal.nascimento();
+        this.castracao = dtoCadastroAnimal.castracao();
 
-        this.descricao = dados.descricao();
+        this.descricao = dtoCadastroAnimal.descricao();
 
+    }
+
+    public void atualizarInformacoes(@Valid DTOEditarAnimal novosDados){
+        this.nome = novosDados.nome();
+        this.raca = novosDados.raca();
+        this.cor = novosDados.cor();
+        this.porte = novosDados.porte();
+        this.nascimento = novosDados.nascimento();
+        this.castracao = novosDados.castracao();
+        this.descricao = novosDados.descricao();
     }
 
 }

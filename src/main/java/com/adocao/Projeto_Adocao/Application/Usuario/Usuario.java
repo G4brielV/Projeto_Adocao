@@ -1,5 +1,6 @@
 package com.adocao.Projeto_Adocao.Application.Usuario;
 
+import com.adocao.Projeto_Adocao.Application.Animal.Animal;
 import com.adocao.Projeto_Adocao.Application.Endereco.Endereco;
 import com.adocao.Projeto_Adocao.Security.Roles.Role;
 import jakarta.persistence.*;
@@ -9,10 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.math.BigInteger;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Table(name = "usuario")
 @Entity(name = "usuarios")
@@ -37,9 +35,14 @@ public class Usuario implements UserDetails {
     private String telefone;
     private BigInteger saldo;
 
+    // Relacionamento com Endereco (um usuário so pode ter um endereço)
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "endereco_id", referencedColumnName = "id", unique = true)
     private Endereco endereco;
+
+    // Relacionamento com Animal (um usuário pode ter vários animais)
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Animal> animais = new ArrayList<>();
 
     // Controle de acesso do perfil
     @ManyToMany(fetch = FetchType.EAGER)

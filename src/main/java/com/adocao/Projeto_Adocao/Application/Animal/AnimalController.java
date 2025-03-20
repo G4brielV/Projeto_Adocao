@@ -1,30 +1,74 @@
 package com.adocao.Projeto_Adocao.Application.Animal;
 
 
-import jakarta.transaction.Transactional;
+import com.adocao.Projeto_Adocao.Application.Usuario.Usuario;
+import com.adocao.Projeto_Adocao.Security.SecurityUtil;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/adocao")
+@RequestMapping("/animal")
 public class AnimalController {
+
+    @Autowired
+    AnimalService animalService;
 
     @Autowired
     AnimalRepository animalRepository;
 
-    @GetMapping
-    public String Hello(){
-        return "Hello";
+
+//    @GetMapping
+//    public String Hello(){
+//        return "Hello";
+//    }
+
+    @GetMapping()
+    public ResponseEntity<List<DTODetalhamentoAnimal>> listar(@AuthenticationPrincipal Usuario usuario, UriComponentsBuilder uriComponentsBuilder){
+            List<DTODetalhamentoAnimal> lista = animalRepository
+                    .findAllByAtivoTrueAndUsuarioId(usuario.getId())
+                    .stream()
+                    .map(DTODetalhamentoAnimal::new)
+                    .toList();
+
+            return ResponseEntity.ok(lista);
     }
 
+    @PostMapping("/cadastro")
+    public ResponseEntity<DTODetalhamentoAnimal> cadastrarAnimal(@RequestBody @Valid DTOCadastroAnimal dtoCadastroAnimal,
+                                                                 @AuthenticationPrincipal Usuario usuario,
+                                                                 UriComponentsBuilder uriComponentsBuilder) {
+        return animalService.cadastrarAnimal(dtoCadastroAnimal, usuario, uriComponentsBuilder);
+    }
 
-    @PostMapping() // Cadastro
-    @Transactional
-    public void cadastrar(@RequestBody @Valid DTOCadastroAnimal dados, UriComponentsBuilder uriComponentsBuilder) {
-        Animal novo_animal = new Animal(dados);
-        animalRepository.save(novo_animal);
+    @PutMapping("/editar/{animalId}")
+    public ResponseEntity<DTODetalhamentoAnimal> editarAnimal(
+            @PathVariable Long animalId,
+            @RequestBody @Valid DTOEditarAnimal dtoEditarAnimal,
+            @AuthenticationPrincipal Usuario usuario,
+            UriComponentsBuilder uriComponentsBuilder){
+        return animalService.editarAnimal(animalId, usuario, dtoEditarAnimal, uriComponentsBuilder);
+    }
 
+    @PutMapping("/inativar/{animalId}")
+    public ResponseEntity<?> inativarAnimal(
+            @PathVariable Long animalId,
+            @AuthenticationPrincipal Usuario usuario,
+            UriComponentsBuilder uriComponentsBuilder){
+        return animalService.inativarAnimal(animalId, usuario, uriComponentsBuilder);
+    }
+
+    @PutMapping("/ativar/{animalId}")
+    public ResponseEntity<?> ativarAnimal(
+            @PathVariable Long animalId,
+            @AuthenticationPrincipal Usuario usuario,
+            UriComponentsBuilder uriComponentsBuilder){
+        return animalService.ativarAnimal(animalId, usuario, uriComponentsBuilder);
     }
 }
+

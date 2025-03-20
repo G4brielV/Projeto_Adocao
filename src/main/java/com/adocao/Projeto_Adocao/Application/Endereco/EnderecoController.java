@@ -1,8 +1,10 @@
 package com.adocao.Projeto_Adocao.Application.Endereco;
 
+import com.adocao.Projeto_Adocao.Application.Usuario.Usuario;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -19,16 +21,23 @@ public class EnderecoController {
     }
 
     @PostMapping("/cadastro")
-    public ResponseEntity<DTODetalhamentoEndereco> cadastrarEndereco(@RequestBody @Valid DTOCadastroEndereco dtoCadastroEndereco, UriComponentsBuilder uriComponentsBuilder) {
-        return enderecoService.cadastrarEndereco(dtoCadastroEndereco, uriComponentsBuilder);
+    public ResponseEntity<DTODetalhamentoEndereco> cadastrarEndereco(@RequestBody @Valid DTOCadastroEndereco dtoCadastroEndereco,
+                                                                     @AuthenticationPrincipal Usuario usuario,
+                                                                     UriComponentsBuilder uriComponentsBuilder) {
+        return enderecoService.cadastrarEndereco(dtoCadastroEndereco, usuario, uriComponentsBuilder);
     }
 
-    @PutMapping("/{enderecoId}/editar")
+    @PutMapping("/editar/{enderecoId}")
     public ResponseEntity<DTODetalhamentoEndereco> editarEndereco(
             @PathVariable Long enderecoId,
-            @RequestBody @Valid DTOAlterarEndereco dtoAlterarEndereco, UriComponentsBuilder uriComponentsBuilder){
-        return enderecoService.editarEndereco(enderecoId, dtoAlterarEndereco, uriComponentsBuilder);
+            @RequestBody @Valid DTOEditarEndereco dtoEditarEndereco,
+            @AuthenticationPrincipal Usuario usuario,
+            UriComponentsBuilder uriComponentsBuilder){
+        return enderecoService.editarEndereco(enderecoId, usuario, dtoEditarEndereco, uriComponentsBuilder);
   }
+
+  // Desativar endereço? ai desativa todos os animais do usuario também
+
 }
 
 

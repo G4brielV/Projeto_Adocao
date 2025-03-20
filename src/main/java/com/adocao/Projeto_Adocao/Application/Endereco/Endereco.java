@@ -1,7 +1,6 @@
 package com.adocao.Projeto_Adocao.Application.Endereco;
 
 
-import com.adocao.Projeto_Adocao.Application.Usuario.DTOCadastroUsuario;
 import com.adocao.Projeto_Adocao.Application.Usuario.Usuario;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
@@ -39,7 +38,7 @@ public class Endereco {
         this.estado = dtoCadastroEndereco.estado();
     }
 
-    public void atualizarInformacoes(@Valid DTOAlterarEndereco novosDados){
+    public void atualizarInformacoes(@Valid DTOEditarEndereco novosDados){
         this.rua = novosDados.rua();
         this.numero = novosDados.numero();
         this.bairro = novosDados.bairro();

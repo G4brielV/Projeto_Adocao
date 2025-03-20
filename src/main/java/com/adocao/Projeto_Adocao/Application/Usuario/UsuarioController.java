@@ -2,12 +2,10 @@ package com.adocao.Projeto_Adocao.Application.Usuario;
 
 
 import com.adocao.Projeto_Adocao.Security.DTOTokenJWT;
-import com.adocao.Projeto_Adocao.Security.TokenJWTService;
+import com.adocao.Projeto_Adocao.Security.SecurityUtil;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -20,10 +18,7 @@ public class UsuarioController {
     private UsuarioService usuarioService;
 
     @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private TokenJWTService tokenJWTService;
+    private UsuarioRepository usuarioRepository;
 
 
     @PostMapping("/cadastro")
@@ -36,4 +31,5 @@ public class UsuarioController {
     public ResponseEntity<DTOTokenJWT> loginUsuario(@RequestBody @Valid DTOLoginUsuario dadosUsuario, UriComponentsBuilder uriComponentsBuilder){
         return usuarioService.logarUsuario(dadosUsuario, uriComponentsBuilder);
     }
+
 }
