@@ -3,6 +3,8 @@ package com.adocao.Projeto_Adocao.Application.Animal;
 
 import com.adocao.Projeto_Adocao.Application.Usuario.Usuario;
 import com.adocao.Projeto_Adocao.Security.SecurityUtil;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +30,10 @@ public class AnimalController {
 //        return "Hello";
 //    }
 
+    @Operation(
+            summary = "Retorna lista de todos animais",
+            security = @SecurityRequirement(name = "bearerAuth")
+    )
     @GetMapping()
     public ResponseEntity<List<DTODetalhamentoAnimal>> listar(@AuthenticationPrincipal Usuario usuario, UriComponentsBuilder uriComponentsBuilder){
             List<DTODetalhamentoAnimal> lista = animalRepository
@@ -39,6 +45,10 @@ public class AnimalController {
             return ResponseEntity.ok(lista);
     }
 
+    @Operation(
+            summary = "Cadastra um animal",
+            security = @SecurityRequirement(name = "bearerAuth")
+    )
     @PostMapping("/cadastro")
     public ResponseEntity<DTODetalhamentoAnimal> cadastrarAnimal(@RequestBody @Valid DTOCadastroAnimal dtoCadastroAnimal,
                                                                  @AuthenticationPrincipal Usuario usuario,
