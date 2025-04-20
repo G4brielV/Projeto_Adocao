@@ -2,7 +2,6 @@ package com.adocao.Projeto_Adocao.Application.Animal;
 
 
 import com.adocao.Projeto_Adocao.Application.Usuario.Usuario;
-import com.adocao.Projeto_Adocao.Security.SecurityUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -25,10 +24,6 @@ public class AnimalController {
     AnimalRepository animalRepository;
 
 
-//    @GetMapping
-//    public String Hello(){
-//        return "Hello";
-//    }
 
     @Operation(
             summary = "Retorna lista de todos animais",

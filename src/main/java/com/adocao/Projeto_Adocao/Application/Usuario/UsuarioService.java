@@ -5,16 +5,11 @@ import com.adocao.Projeto_Adocao.Security.PasswordEncryptService;
 import com.adocao.Projeto_Adocao.Security.Roles.Role;
 import com.adocao.Projeto_Adocao.Security.Roles.RoleRepository;
 import com.adocao.Projeto_Adocao.Security.TokenJWTService;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.math.BigInteger;
@@ -78,6 +73,7 @@ public class UsuarioService{
     public ResponseEntity<DTOTokenJWT> logarUsuario(DTOLoginUsuario dadosUsuario, UriComponentsBuilder uriComponentsBuilder) {
         var token = new UsernamePasswordAuthenticationToken(dadosUsuario.login(), dadosUsuario.senha());
         var autenticacao = authenticationManager.authenticate(token);
+
 
         var tokenJWT = tokenJWTService.gerarToken((Usuario) autenticacao.getPrincipal());
 

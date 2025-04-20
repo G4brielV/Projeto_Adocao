@@ -35,10 +35,12 @@ public class SecurityConfiguration {
                         .requestMatchers(
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
-                                "/swagger-ui.html"
+                                "/swagger-ui.html",
+                                "/api-docs/**"
                         ).permitAll()
                         // Endpoint de Cadastro e Login
                         .requestMatchers(HttpMethod.POST, "/autenticacao/**").permitAll()
+//                        .requestMatchers("/animal/**").hasRole("CRECHE")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

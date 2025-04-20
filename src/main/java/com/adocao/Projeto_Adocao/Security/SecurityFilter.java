@@ -1,8 +1,6 @@
 package com.adocao.Projeto_Adocao.Security;
 
 import com.adocao.Projeto_Adocao.Application.Usuario.UserDetails_Service;
-import com.adocao.Projeto_Adocao.Application.Usuario.UsuarioRepository;
-import com.adocao.Projeto_Adocao.Application.Usuario.UsuarioService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,6 +27,7 @@ public class SecurityFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
+
 
         var JWTToken = recuperarToken(request);
 

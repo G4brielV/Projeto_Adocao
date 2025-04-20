@@ -8,9 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class SecurityUtil {
 
-    private SecurityUtil() {
-
-    }
+    private SecurityUtil() {}
 
     public static Long getIdUsuarioAutenticado() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
