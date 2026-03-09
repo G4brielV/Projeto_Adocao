@@ -4,13 +4,13 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
 
-public record DTOCadastroUsuario(
+public record CadastroRequest(
         @NotBlank
         String nome,
 
         @NotBlank
         @ValidacaoDocumento
-        String identificador,
+        String cpf,
 
         @NotBlank
         @Email(message = "modelo de email inválido")

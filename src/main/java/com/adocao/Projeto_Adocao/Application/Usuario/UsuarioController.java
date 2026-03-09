@@ -1,9 +1,9 @@
 package com.adocao.Projeto_Adocao.Application.Usuario;
 
 
-import com.adocao.Projeto_Adocao.Security.DTOTokenJWT;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,27 +11,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+@RequiredArgsConstructor
 @RestController
-@RequestMapping("/autenticacao")
+@RequestMapping("/usuario")
 public class UsuarioController {
 
+    private final UsuarioService usuarioService;
 
-    @Autowired
-    private UsuarioService usuarioService;
+    @Operation(
+            summary = "Cadastra um novo usuario"
+    )
+    @PostMapping()
+    public ResponseEntity<CadastroResponse> cadastrarUsuario (@RequestBody @Valid CadastroRequest cadastroRequest, UriComponentsBuilder uriComponentsBuilder){
+        CadastroResponse response = usuarioService.adicionarUsuario(cadastroRequest);
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
+        var uri = uriComponentsBuilder
+                .path("/usuario/{id}")  // Caminho do endpoint da class para a API
+                .buildAndExpand(response.id()) // Pegar o ID do novo usuario
+                .toUri();
 
-
-    @PostMapping("/cadastro")
-    public ResponseEntity<DTODetalhamentoNovoUsuario> cadastrarUsuario (@RequestBody @Valid DTOCadastroUsuario novoUsuario, UriComponentsBuilder uriComponentsBuilder){
-        return usuarioService.adicionarUsuario(novoUsuario, uriComponentsBuilder);
-    }
-
-    // Não entendi pq n posso deixar no UsuarioService
-    @PostMapping("/login")
-    public ResponseEntity<DTOTokenJWT> loginUsuario(@RequestBody @Valid DTOLoginUsuario dadosUsuario, UriComponentsBuilder uriComponentsBuilder){
-        return usuarioService.logarUsuario(dadosUsuario, uriComponentsBuilder);
+        return ResponseEntity.created(uri).body(response);
     }
 
 }

@@ -1,4 +1,4 @@
-package com.adocao.Projeto_Adocao.Security;
+package com.adocao.Projeto_Adocao.Infra.Security;
 
 import com.adocao.Projeto_Adocao.Application.Usuario.Usuario;
 import com.auth0.jwt.JWT;

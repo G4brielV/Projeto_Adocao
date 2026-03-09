@@ -2,7 +2,7 @@ package com.adocao.Projeto_Adocao.Application.Usuario;
 
 import com.adocao.Projeto_Adocao.Application.Animal.Animal;
 import com.adocao.Projeto_Adocao.Application.Endereco.Endereco;
-import com.adocao.Projeto_Adocao.Security.Roles.Role;
+import com.adocao.Projeto_Adocao.Application.Usuario.Roles.Role;
 import jakarta.persistence.*;
 
 import lombok.*;
@@ -14,22 +14,24 @@ import java.math.BigInteger;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Table(name = "usuario")
-@Entity(name = "usuarios")
+@Builder
+@Table(name ="usuario")
+@Entity
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode( of= "id")
+@EqualsAndHashCode(of= "id")
 public class Usuario implements UserDetails {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    /*Para o builder identificar*/
+    @Builder.Default
     private Boolean ativo = true;
+
     private String nome;
-    private String identificador;
-    private Character tipo;
+    private String cpf;
     private String email;
 
     private String senha;
@@ -47,6 +49,8 @@ public class Usuario implements UserDetails {
     private List<Animal> animais = new ArrayList<>();
 
     // Controle de acesso do perfil
+    /*Para que Builder coloque uma lista vazia e não null*/
+    @Builder.Default
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "usuario_role",
@@ -54,14 +58,6 @@ public class Usuario implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    // Construtor da class
-    public Usuario(DTOCadastroUsuario dados){
-        this.nome = dados.nome();
-        this.identificador = dados.identificador();
-        this.email = dados.email();
-        this.senha = dados.senha();
-        this.telefone = dados.telefone();
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -70,6 +66,19 @@ public class Usuario implements UserDetails {
                 .collect(Collectors.toList());
     }
 
+    public void desativar() {
+        this.ativo = false;
+    }
+
+    public void atualizarSenha(String senhaCriptografada) {
+        this.senha = senhaCriptografada;
+    }
+
+    public void atualizarEndereco(Endereco endereco) {
+        this.endereco = endereco;
+    }
+
+
     @Override
     public String getPassword() {
         return senha;
@@ -77,6 +86,15 @@ public class Usuario implements UserDetails {
 
     @Override
     public String getUsername() {
-        return identificador;
+        return cpf;
     }
+
+    @Override
+    public boolean isAccountNonExpired() { return true; }
+    @Override
+    public boolean isAccountNonLocked() { return true; }
+    @Override
+    public boolean isCredentialsNonExpired() { return true; }
+    @Override
+    public boolean isEnabled() { return this.ativo; }
 }

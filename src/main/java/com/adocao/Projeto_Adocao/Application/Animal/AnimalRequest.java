@@ -2,12 +2,12 @@ package com.adocao.Projeto_Adocao.Application.Animal;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDate;
 
-public record DTOEditarAnimal(
+public record AnimalRequest(
         @NotBlank
         String nome,
 
@@ -27,5 +27,4 @@ public record DTOEditarAnimal(
 
         @NotBlank
         String descricao // Peso, altura, vacinas e vermifugação na descrição
-) { }
-
+        ) { }

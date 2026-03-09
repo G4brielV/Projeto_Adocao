@@ -1,4 +1,4 @@
-package com.adocao.Projeto_Adocao.Security.Roles;
+package com.adocao.Projeto_Adocao.Application.Usuario.Roles;
 
 
 import jakarta.persistence.*;

@@ -2,7 +2,7 @@ package com.adocao.Projeto_Adocao.Application.Endereco;
 
 import jakarta.validation.constraints.NotBlank;
 
-public record DTOCadastroEndereco(
+public record EnderecoRequest(
         @NotBlank
         String rua,
 

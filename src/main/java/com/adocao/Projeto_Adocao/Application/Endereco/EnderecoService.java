@@ -2,58 +2,47 @@ package com.adocao.Projeto_Adocao.Application.Endereco;
 
 import com.adocao.Projeto_Adocao.Application.Usuario.Usuario;
 import com.adocao.Projeto_Adocao.Application.Usuario.UsuarioRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.transaction.annotation.Transactional;
 
+@RequiredArgsConstructor
 @Service
 public class EnderecoService {
 
-    @Autowired
-    private EnderecoRepository enderecoRepository;
+    private final EnderecoRepository enderecoRepository;
+    private final UsuarioRepository usuarioRepository;
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
-
-
-    public ResponseEntity<DTODetalhamentoEndereco> cadastrarEndereco(DTOCadastroEndereco dtoCadastroEndereco,
-                                                                     Usuario usuario,
-                                                                     UriComponentsBuilder uriComponentsBuilder){
-
-        // Verifica se o usuario ja tem endereço cadastrado
+    @Transactional
+    public EnderecoResponse cadastrarEndereco(EnderecoRequest enderecoRequest,
+                                                              Usuario usuario){
+        /*Verifica se o usuario ja tem endereço cadastrado
+        Qual retorno HTTP? ou retornar so esse runtime*/
         if (usuario.getEndereco() != null) {
             throw new RuntimeException("Usuário já possui um endereço cadastrado.");
         }
 
         // Cadastra o Endereço
-        Endereco novoEndereco = new Endereco(dtoCadastroEndereco);
-        novoEndereco.setUsuario(usuario);
+        Endereco novoEndereco = EnderecoMapper.toEndereco(enderecoRequest);
+        novoEndereco.atualizarUsuario(usuario);
         Endereco enderecoSalvo = enderecoRepository.save(novoEndereco);
 
         // Atualiza o usuário com o ID do endereço
-        usuario.setEndereco(enderecoSalvo); // Define o endereço para o usuário
+        usuario.atualizarEndereco(enderecoSalvo); // Define o endereço para o usuário
         usuarioRepository.save(usuario);   // Salva o usuário com o endereço atualizado
 
-        // Pegando a URL para acesso desse item no banco
-        var uri = uriComponentsBuilder
-                .path("/endereco/{id}")  // Caminho do endpoint da class para a API
-                .buildAndExpand(novoEndereco.getId()) // Pegar o ID do novo usuario
-                .toUri();
-
-        return ResponseEntity.created(uri).body(new DTODetalhamentoEndereco(novoEndereco));
+        return EnderecoMapper.toEnderecoResponse(novoEndereco);
     }
 
-
-    public ResponseEntity<DTODetalhamentoEndereco> editarEndereco(Long enderecoId,
-                                                                  Usuario usuario,
-                                                                  DTOEditarEndereco dtoEditarEndereco,
-                                                                  UriComponentsBuilder uriComponentsBuilder){
-
+    @Transactional
+    public EnderecoResponse editarEndereco(Long enderecoId,
+                                                           Usuario usuario,
+                                                           EnderecoUpdate enderecoUpdate){
         // Pega o Id do usuario logado
         Long usuarioId = usuario.getId();
 
-        // Verifica se o endereço existe e pertence ao usuário
+        /*Verifica se o endereço existe e pertence ao usuário
+        Qual retorno HTTP? ou retornar so esse runtime*/
         Endereco altEndereco = enderecoRepository.findById(enderecoId)
                 .orElseThrow(() -> new RuntimeException("Endereço não encontrado."));
 
@@ -62,19 +51,12 @@ public class EnderecoService {
             throw new RuntimeException("Usuário não autorizado a editar este endereço.");
         }
 
-        altEndereco.atualizarInformacoes(dtoEditarEndereco);
+        altEndereco.atualizarInformacoes(enderecoUpdate);
 
         // Salva o endereço atualizado
         enderecoRepository.save(altEndereco);
 
-
-        // Pegando a URL para acesso desse item no banco
-        var uri = uriComponentsBuilder
-                .path("/usuario/{id}")  // Caminho do endpoint da class para a API
-                .buildAndExpand(altEndereco.getId()) // Pegar o ID do novo usuario
-                .toUri();
-
-        return ResponseEntity.created(uri).body(new DTODetalhamentoEndereco(altEndereco));
+        return EnderecoMapper.toEnderecoResponse(altEndereco);
     }
 
 

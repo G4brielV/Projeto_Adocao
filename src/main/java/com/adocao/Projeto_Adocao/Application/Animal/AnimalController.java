@@ -5,7 +5,7 @@ import com.adocao.Projeto_Adocao.Application.Usuario.Usuario;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -14,29 +14,19 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/animal")
 public class AnimalController {
 
-    @Autowired
-    AnimalService animalService;
-
-    @Autowired
-    AnimalRepository animalRepository;
-
-
+    private  final AnimalService animalService;
 
     @Operation(
-            summary = "Retorna lista de todos animais",
+            summary = "Retorna lista de todos animais do usuario",
             security = @SecurityRequirement(name = "bearerAuth")
     )
     @GetMapping()
-    public ResponseEntity<List<DTODetalhamentoAnimal>> listar(@AuthenticationPrincipal Usuario usuario, UriComponentsBuilder uriComponentsBuilder){
-            List<DTODetalhamentoAnimal> lista = animalRepository
-                    .findAllByAtivoTrueAndUsuarioId(usuario.getId())
-                    .stream()
-                    .map(DTODetalhamentoAnimal::new)
-                    .toList();
-
+    public ResponseEntity<List<AnimalResponse>> listar(@AuthenticationPrincipal Usuario usuario, UriComponentsBuilder uriComponentsBuilder){
+            List<AnimalResponse> lista = animalService.getAnimalsFromUser(usuario);
             return ResponseEntity.ok(lista);
     }
 
@@ -45,19 +35,32 @@ public class AnimalController {
             security = @SecurityRequirement(name = "bearerAuth")
     )
     @PostMapping("/cadastro")
-    public ResponseEntity<DTODetalhamentoAnimal> cadastrarAnimal(@RequestBody @Valid DTOCadastroAnimal dtoCadastroAnimal,
-                                                                 @AuthenticationPrincipal Usuario usuario,
-                                                                 UriComponentsBuilder uriComponentsBuilder) {
-        return animalService.cadastrarAnimal(dtoCadastroAnimal, usuario, uriComponentsBuilder);
+    public ResponseEntity<AnimalResponse> cadastrarAnimal(@RequestBody @Valid AnimalRequest animalRequest,
+                                                          @AuthenticationPrincipal Usuario usuario,
+                                                          UriComponentsBuilder uriComponentsBuilder) {
+        AnimalResponse response = animalService.cadastrarAnimal(animalRequest, usuario);
+        var uri = uriComponentsBuilder
+                .path("/endereco/{id}")  // Caminho do endpoint da class para a API
+                .buildAndExpand(response.id()) // Pegar o ID do novo usuario
+                .toUri();
+        return ResponseEntity.created(uri).body(response);
     }
 
     @PutMapping("/editar/{animalId}")
-    public ResponseEntity<DTODetalhamentoAnimal> editarAnimal(
+    public ResponseEntity<AnimalResponse> editarAnimal(
             @PathVariable Long animalId,
-            @RequestBody @Valid DTOEditarAnimal dtoEditarAnimal,
+            @RequestBody @Valid AnimalUpdate animalUpdate,
             @AuthenticationPrincipal Usuario usuario,
             UriComponentsBuilder uriComponentsBuilder){
-        return animalService.editarAnimal(animalId, usuario, dtoEditarAnimal, uriComponentsBuilder);
+
+        AnimalResponse response = animalService.editarAnimal(animalId, usuario, animalUpdate);
+
+        var uri = uriComponentsBuilder
+                .path("/usuario/{id}")  // Caminho do endpoint da class para a API
+                .buildAndExpand(response.id()) // Pegar o ID do novo usuario
+                .toUri();
+
+        return ResponseEntity.created(uri).body(response);
     }
 
     @PutMapping("/inativar/{animalId}")
@@ -65,7 +68,13 @@ public class AnimalController {
             @PathVariable Long animalId,
             @AuthenticationPrincipal Usuario usuario,
             UriComponentsBuilder uriComponentsBuilder){
-        return animalService.inativarAnimal(animalId, usuario, uriComponentsBuilder);
+
+        animalService.inativarAnimal(animalId, usuario);
+        var uri = uriComponentsBuilder
+                .path("/animal/{id}")
+                .buildAndExpand(animalId)
+                .toUri();
+        return ResponseEntity.ok(uri);
     }
 
     @PutMapping("/ativar/{animalId}")
@@ -73,7 +82,12 @@ public class AnimalController {
             @PathVariable Long animalId,
             @AuthenticationPrincipal Usuario usuario,
             UriComponentsBuilder uriComponentsBuilder){
-        return animalService.ativarAnimal(animalId, usuario, uriComponentsBuilder);
+        animalService.ativarAnimal(animalId, usuario);
+        var uri = uriComponentsBuilder
+                .path("/animal/{id}")
+                .buildAndExpand(animalId)
+                .toUri();
+        return ResponseEntity.ok(uri);
     }
 }
 

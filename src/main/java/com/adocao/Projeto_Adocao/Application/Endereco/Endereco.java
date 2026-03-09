@@ -6,10 +6,10 @@ import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import lombok.*;
 
+@Builder
 @Table(name="endereco")
-@Entity(name="enderecos")
+@Entity
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode (of="id")
@@ -19,6 +19,7 @@ public class Endereco {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Builder.Default
     private Boolean ativo = true;
     private String rua;
     private String numero;
@@ -29,21 +30,17 @@ public class Endereco {
     @OneToOne(mappedBy = "endereco")
     private Usuario usuario;
 
-    // Construtor da class
-    public Endereco(DTOCadastroEndereco dtoCadastroEndereco){
-        this.rua = dtoCadastroEndereco.rua();
-        this.numero = dtoCadastroEndereco.numero();
-        this.bairro = dtoCadastroEndereco.bairro();
-        this.cidade = dtoCadastroEndereco.cidade();
-        this.estado = dtoCadastroEndereco.estado();
-    }
 
-    public void atualizarInformacoes(@Valid DTOEditarEndereco novosDados){
+    public void atualizarInformacoes(@Valid EnderecoUpdate novosDados){
         this.rua = novosDados.rua();
         this.numero = novosDados.numero();
         this.bairro = novosDados.bairro();
         this.cidade = novosDados.cidade();
         this.estado = novosDados.estado();
+    }
+
+    public void atualizarUsuario(Usuario usuario){
+        this.usuario = usuario;
     }
 
 }

@@ -1,4 +1,4 @@
-package com.adocao.Projeto_Adocao.Security;
+package com.adocao.Projeto_Adocao.Infra.Security;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
