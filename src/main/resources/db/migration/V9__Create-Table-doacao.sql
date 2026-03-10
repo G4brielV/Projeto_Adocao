@@ -3,7 +3,7 @@ CREATE TABLE doacao (
     valor NUMERIC(10, 2) NOT NULL,
     data TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     id_doador INT NOT NULL, -- Quem está doando
-    id_creche INT NOT NULL, -- Para quem está doando
+    id_donatario INT NOT NULL, -- Quem está recebendo a doação
     FOREIGN KEY (id_doador) REFERENCES usuario (id),
-    FOREIGN KEY (id_creche) REFERENCES usuario (id)
+    FOREIGN KEY (id_donatario) REFERENCES usuario (id)
 );

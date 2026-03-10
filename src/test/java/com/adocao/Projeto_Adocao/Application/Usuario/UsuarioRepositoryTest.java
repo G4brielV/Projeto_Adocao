@@ -1,17 +1,16 @@
 package com.adocao.Projeto_Adocao.Application.Usuario;
 
+import com.adocao.Projeto_Adocao.Application.Auth.CadastroRequest;
 import jakarta.persistence.EntityManager;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /*
 Teste Unitário do findByID() do JPA
@@ -21,20 +20,18 @@ Teste Unitário do findByID() do JPA
 
 @DataJpaTest
 @ActiveProfiles("test")
+@RequiredArgsConstructor
 class UsuarioRepositoryTest {
 
-    @Autowired
-    UsuarioRepository usuarioRepository;
-
-    @Autowired
-    EntityManager entityManager;
+    private final UsuarioRepository usuarioRepository;
+    private final EntityManager entityManager;
 
     @Test
     @DisplayName("Existe, deve retornar o usuario")
     void findByTelefoneSuccess() {
 
         String telefone = "987654321";
-        DTOCadastroUsuario data = new DTOCadastroUsuario("JJ", "11111111111", "xxx@example.com", "senha" , telefone);
+        CadastroRequest data = new CadastroRequest("JJ", "11111111111", "xxx@example.com", "senha" , telefone);
         this.createUser(data);
 
         Optional<Usuario> resultado = this.usuarioRepository.findByTelefone(telefone);
@@ -53,9 +50,8 @@ class UsuarioRepositoryTest {
         assertThat(resultado.isEmpty()).isTrue();
     }
 
-    private Usuario createUser(DTOCadastroUsuario data){
+    private Usuario createUser(CadastroRequest data){
         Usuario newUser = new Usuario(data);
-        newUser.setTipo('P');
         System.out.println("AAAAAAAAAAAAA" + newUser);
         this.entityManager.persist(newUser);
         return newUser;

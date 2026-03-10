@@ -1,4 +1,4 @@
 CREATE TABLE role (
     id SERIAL PRIMARY KEY,
-    nome VARCHAR(50) UNIQUE NOT NULL -- Exemplo: 'PESSOA', 'CRECHE', 'ADMIN'
+    nome VARCHAR(50) UNIQUE NOT NULL -- Exemplo: 'USER', 'ADMIN'
 );

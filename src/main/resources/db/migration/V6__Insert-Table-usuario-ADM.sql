@@ -15,9 +15,9 @@ INSERT INTO usuario_role (usuario_id, role_id)
 VALUES
     (
         (SELECT id FROM usuario WHERE email = 'admin@example.com'),
-        (SELECT id FROM role WHERE nome = 'PESSOA')
+        (SELECT id FROM role WHERE nome = 'USER')
     ),
     (
         (SELECT id FROM usuario WHERE email = 'admin@example.com'),
-        (SELECT id FROM role WHERE nome = 'CRECHE')
+        (SELECT id FROM role WHERE nome = 'ADMIN')
     );

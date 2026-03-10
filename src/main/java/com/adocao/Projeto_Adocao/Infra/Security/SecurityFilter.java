@@ -1,26 +1,29 @@
 package com.adocao.Projeto_Adocao.Infra.Security;
 
-import com.adocao.Projeto_Adocao.Application.Usuario.UserDetails_Service;
+import com.adocao.Projeto_Adocao.Application.Usuario.UsuarioService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
 
+@RequiredArgsConstructor
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private TokenJWTService tokenJWTService;
 
-    @Autowired
-    private UserDetails_Service userDetails_service;
+    private final TokenJWTService tokenJWTService;
+    private final UserDetailsServiceImpl userDetailsService;
+    private final UsuarioService usuarioService;
 
 
     @Override
@@ -29,18 +32,19 @@ public class SecurityFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
 
 
-        var JWTToken = recuperarToken(request);
+        String JWTToken = recuperarToken(request);
 
-        // Valida se é nulo
         if (JWTToken != null) {
-            var subject = tokenJWTService.getSubject(JWTToken);
-            var usuario = userDetails_service.loadUserById(subject); // Pegando o Usuario/Login pelo "id" enviado no subject do Token
+            Optional<JWTUserData> optJwtUserData = tokenJWTService.verifyToken(JWTToken);
+            if (optJwtUserData.isPresent()){
+                JWTUserData userData = optJwtUserData.get();
+                List<SimpleGrantedAuthority> authorities = userData.roles().stream().map(SimpleGrantedAuthority::new).toList();
 
-            var authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
-
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-        }
-        filterChain.doFilter(request,response);
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userData, null, authorities);
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            }
+            filterChain.doFilter(request,response);
+        } else { filterChain.doFilter(request, response); }
     }
 
     private String recuperarToken(HttpServletRequest request) {
@@ -48,7 +52,7 @@ public class SecurityFilter extends OncePerRequestFilter {
 
         // Valida se foi enviado algum Token
         if (authorizationHeader != null) {
-            return authorizationHeader.replace("Bearer ", "");
+            return authorizationHeader.substring("Bearer ".length());
         }
         return null;
     }

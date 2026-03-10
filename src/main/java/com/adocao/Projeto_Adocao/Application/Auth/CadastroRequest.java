@@ -1,5 +1,6 @@
-package com.adocao.Projeto_Adocao.Application.Usuario;
+package com.adocao.Projeto_Adocao.Application.Auth;
 
+import com.adocao.Projeto_Adocao.Application.Usuario.ValidacaoDocumento;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 

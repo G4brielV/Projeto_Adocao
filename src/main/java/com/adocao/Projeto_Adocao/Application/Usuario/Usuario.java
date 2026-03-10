@@ -4,7 +4,6 @@ import com.adocao.Projeto_Adocao.Application.Animal.Animal;
 import com.adocao.Projeto_Adocao.Application.Endereco.Endereco;
 import com.adocao.Projeto_Adocao.Application.Usuario.Roles.Role;
 import jakarta.persistence.*;
-
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -74,6 +73,13 @@ public class Usuario implements UserDetails {
         this.senha = senhaCriptografada;
     }
 
+    public void adicionarRoles(Role role) {
+        if (this.roles == null) {
+            this.roles = new HashSet<>();
+        }
+        this.roles.add(role);
+    }
+
     public void atualizarEndereco(Endereco endereco) {
         this.endereco = endereco;
     }
@@ -97,4 +103,5 @@ public class Usuario implements UserDetails {
     public boolean isCredentialsNonExpired() { return true; }
     @Override
     public boolean isEnabled() { return this.ativo; }
+
 }

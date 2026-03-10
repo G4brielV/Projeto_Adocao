@@ -1,5 +1,7 @@
 package com.adocao.Projeto_Adocao.Application.Usuario;
 
+import com.adocao.Projeto_Adocao.Application.Auth.CadastroRequest;
+import com.adocao.Projeto_Adocao.Application.Auth.CadastroResponse;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
