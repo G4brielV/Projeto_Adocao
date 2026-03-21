@@ -19,8 +19,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class AuthController {
 
     private final AuthService authService;
-    private final AuthenticationManager authenticationManager;
-    private final TokenJWTService tokenJWTService;
 
     @Operation(
             summary = "Login de usuario"

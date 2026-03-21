@@ -1,6 +1,8 @@
 package com.adocao.Projeto_Adocao.Application.Endereco;
 
-import com.adocao.Projeto_Adocao.Application.Usuario.Usuario;
+import com.adocao.Projeto_Adocao.Infra.Security.JWTUserData;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +12,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/endereco")
+@RequestMapping("/enderecos")
 public class EnderecoController {
 
     private final EnderecoService enderecoService;
@@ -20,35 +22,49 @@ public class EnderecoController {
         return "Hello User";
     }
 
-    @PostMapping("/cadastro")
+
+    @Operation(
+            summary = "Retorna o endereço do Usuario",
+            security = @SecurityRequirement(name = "bearerAuth")
+    )
+    @GetMapping("/me")
+    public ResponseEntity<EnderecoResponse> getEndereco(@AuthenticationPrincipal JWTUserData jwtUserData,
+                             UriComponentsBuilder uriComponentsBuilder){
+
+        EnderecoResponse enderecoResponse = enderecoService.getEndereco(jwtUserData);
+
+        return ResponseEntity.ok(enderecoResponse);
+    }
+
+
+    @PostMapping()
     public ResponseEntity<EnderecoResponse> cadastrarEndereco(@RequestBody @Valid EnderecoRequest enderecoRequest,
-                                                              @AuthenticationPrincipal Usuario usuario,
+                                                              @AuthenticationPrincipal JWTUserData jwtUserData,
                                                               UriComponentsBuilder uriComponentsBuilder) {
 
-        EnderecoResponse enderecoResponse = enderecoService.cadastrarEndereco(enderecoRequest, usuario);
+        EnderecoResponse enderecoResponse = enderecoService.cadastrarEndereco(enderecoRequest, jwtUserData);
 
         // Pegando a URL para acesso desse item no banco
         var uri = uriComponentsBuilder
-                .path("/endereco/{id}")  // Caminho do endpoint da class para a API
-                .buildAndExpand(enderecoResponse.id()) // Pegar o ID do novo usuario
+                .path("/enderecos/me")  // Caminho do endpoint da class para a API
+                .build()
                 .toUri();
 
         return ResponseEntity.created(uri).body(enderecoResponse);
     }
 
-    @PutMapping("/editar/{enderecoId}")
+    @PutMapping()
     public ResponseEntity<EnderecoResponse> editarEndereco(
-            @PathVariable Long enderecoId,
             @RequestBody @Valid EnderecoUpdate enderecoUpdate,
-            @AuthenticationPrincipal Usuario usuario,
+            @AuthenticationPrincipal JWTUserData jwtUserData,
             UriComponentsBuilder uriComponentsBuilder){
 
-        EnderecoResponse enderecoResponse = enderecoService.editarEndereco(enderecoId, usuario, enderecoUpdate);
+        EnderecoResponse enderecoResponse = enderecoService.editarEndereco(jwtUserData, enderecoUpdate);
 
         // Pegando a URL para acesso desse item no banco
         var uri = uriComponentsBuilder
-                .path("/usuario/{id}")  // Caminho do endpoint da class para a API
-                .buildAndExpand(enderecoResponse.id()) // Pegar o ID do novo usuario
+                .path("/enderecos/me")  // Caminho do endpoint da class para a API
+                .build()
                 .toUri();
 
         return ResponseEntity.created(uri).body(enderecoResponse);

@@ -14,7 +14,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Builder
-@Table(name ="usuario")
+@Table(name ="usuarios")
 @Entity
 @Getter
 @AllArgsConstructor
@@ -39,8 +39,7 @@ public class Usuario implements UserDetails {
     private BigInteger saldo;
 
     // Relacionamento com Endereco (um usuário so pode ter um endereço)
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "endereco_id", referencedColumnName = "id", unique = true)
+    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
     private Endereco endereco;
 
     // Relacionamento com Animal (um usuário pode ter vários animais)
@@ -52,7 +51,7 @@ public class Usuario implements UserDetails {
     @Builder.Default
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "usuario_role",
+            name = "usuario_roles",
             joinColumns = @JoinColumn(name = "usuario_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();

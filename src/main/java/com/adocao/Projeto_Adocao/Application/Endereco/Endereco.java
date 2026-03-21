@@ -7,7 +7,7 @@ import jakarta.validation.Valid;
 import lombok.*;
 
 @Builder
-@Table(name="endereco")
+@Table(name="enderecos")
 @Entity
 @Getter
 @AllArgsConstructor
@@ -27,7 +27,8 @@ public class Endereco {
     private String cidade;
     private String estado;
 
-    @OneToOne(mappedBy = "endereco")
+    @OneToOne
+    @JoinColumn(name = "usuario_id", unique = true)
     private Usuario usuario;
 
 

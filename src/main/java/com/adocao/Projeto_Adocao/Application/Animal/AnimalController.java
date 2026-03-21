@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/animal")
+@RequestMapping("/animais")
 public class AnimalController {
 
     private  final AnimalService animalService;

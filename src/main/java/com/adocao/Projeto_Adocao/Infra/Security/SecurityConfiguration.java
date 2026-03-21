@@ -41,7 +41,7 @@ public class SecurityConfiguration {
                                 "/api-docs/**"
                         ).permitAll()
                         // Endpoint de Cadastro e Login
-                        .requestMatchers(HttpMethod.GET, "/usuario/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/usuarios/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/cadastro").permitAll()
                         .requestMatchers(HttpMethod.GET, "/admin/**").hasRole("ADMIN")

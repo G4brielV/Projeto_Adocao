@@ -1,4 +1,4 @@
-CREATE TABLE role (
+CREATE TABLE roles (
     id SERIAL PRIMARY KEY,
     nome VARCHAR(50) UNIQUE NOT NULL -- Exemplo: 'USER', 'ADMIN'
 );

@@ -1,6 +1,5 @@
 package com.adocao.Projeto_Adocao.Application.Endereco;
 
-import com.adocao.Projeto_Adocao.Application.Usuario.Usuario;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
@@ -18,7 +17,6 @@ public class EnderecoMapper {
 
     public EnderecoResponse toEnderecoResponse(Endereco endereco) {
         return EnderecoResponse.builder()
-                .id(endereco.getId())
                 .estado(endereco.getEstado())
                 .cidade(endereco.getCidade())
                 .rua(endereco.getRua())

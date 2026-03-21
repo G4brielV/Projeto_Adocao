@@ -2,6 +2,7 @@ package com.adocao.Projeto_Adocao.Application.Endereco;
 
 import com.adocao.Projeto_Adocao.Application.Usuario.Usuario;
 import com.adocao.Projeto_Adocao.Application.Usuario.UsuarioRepository;
+import com.adocao.Projeto_Adocao.Infra.Security.JWTUserData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,51 +14,51 @@ public class EnderecoService {
     private final EnderecoRepository enderecoRepository;
     private final UsuarioRepository usuarioRepository;
 
+    public EnderecoResponse getEndereco(JWTUserData jwtUserData) {
+        Endereco endereco = enderecoRepository.findByUsuarioId(jwtUserData.id())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
+
+        /*É uma runtime? HTTP?*/
+        if (endereco == null) {
+            throw new RuntimeException("Endereço não encontrado para o usuário.");
+        }
+        return EnderecoMapper.toEnderecoResponse(endereco);
+    }
+
     @Transactional
-    public EnderecoResponse cadastrarEndereco(EnderecoRequest enderecoRequest,
-                                                              Usuario usuario){
-        /*Verifica se o usuario ja tem endereço cadastrado
-        Qual retorno HTTP? ou retornar so esse runtime*/
+    public EnderecoResponse cadastrarEndereco(EnderecoRequest enderecoRequest, JWTUserData jwtUserData) {
+        // Busca o usuário autenticado
+        Usuario usuario = usuarioRepository.findById(jwtUserData.id())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
+
+        // Verifica se o usuário já possui endereço
         if (usuario.getEndereco() != null) {
             throw new RuntimeException("Usuário já possui um endereço cadastrado.");
         }
 
-        // Cadastra o Endereço
+        // Cria e vincula o endereço ao usuário
         Endereco novoEndereco = EnderecoMapper.toEndereco(enderecoRequest);
         novoEndereco.atualizarUsuario(usuario);
         Endereco enderecoSalvo = enderecoRepository.save(novoEndereco);
 
-        // Atualiza o usuário com o ID do endereço
-        usuario.atualizarEndereco(enderecoSalvo); // Define o endereço para o usuário
-        usuarioRepository.save(usuario);   // Salva o usuário com o endereço atualizado
+        // Atualiza o usuário com o endereço
+        usuario.atualizarEndereco(enderecoSalvo);
+        usuarioRepository.save(usuario);
 
-        return EnderecoMapper.toEnderecoResponse(novoEndereco);
+        return EnderecoMapper.toEnderecoResponse(enderecoSalvo);
     }
 
     @Transactional
-    public EnderecoResponse editarEndereco(Long enderecoId,
-                                                           Usuario usuario,
-                                                           EnderecoUpdate enderecoUpdate){
-        // Pega o Id do usuario logado
-        Long usuarioId = usuario.getId();
-
-        /*Verifica se o endereço existe e pertence ao usuário
-        Qual retorno HTTP? ou retornar so esse runtime*/
-        Endereco altEndereco = enderecoRepository.findById(enderecoId)
-                .orElseThrow(() -> new RuntimeException("Endereço não encontrado."));
-
-        // Verifica se é o endereço do Usuario cadastrado
-        if (!altEndereco.getUsuario().getId().equals(usuarioId)) {
-            throw new RuntimeException("Usuário não autorizado a editar este endereço.");
+    public EnderecoResponse editarEndereco(JWTUserData jwtUserData, EnderecoUpdate enderecoUpdate) {
+        Usuario usuario = usuarioRepository.findById(jwtUserData.id())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
+        Endereco endereco = usuario.getEndereco();
+        if (endereco == null) {
+            throw new RuntimeException("Endereço não encontrado para o usuário.");
         }
-
-        altEndereco.atualizarInformacoes(enderecoUpdate);
-
-        // Salva o endereço atualizado
-        enderecoRepository.save(altEndereco);
-
-        return EnderecoMapper.toEnderecoResponse(altEndereco);
+        endereco.atualizarInformacoes(enderecoUpdate);
+        enderecoRepository.save(endereco);
+        return EnderecoMapper.toEnderecoResponse(endereco);
     }
-
 
 }

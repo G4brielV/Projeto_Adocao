@@ -1,4 +1,4 @@
-CREATE TABLE animal (
+CREATE TABLE animais (
     id SERIAL PRIMARY KEY,
     ativo BOOLEAN DEFAULT TRUE,
     nome VARCHAR(255) NOT NULL,
@@ -9,5 +9,5 @@ CREATE TABLE animal (
     castracao BOOLEAN,
     descricao TEXT,
     usuario_id INT NOT NULL, -- Referência ao usuario que cadastrou o animal
-    FOREIGN KEY (usuario_id) REFERENCES usuario (id)
+    FOREIGN KEY (usuario_id) REFERENCES usuarios (id)
 );
