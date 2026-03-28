@@ -1,6 +1,5 @@
 package com.adocao.Projeto_Adocao.Application.Animal;
 
-
 import com.adocao.Projeto_Adocao.Application.Usuario.Usuario;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
@@ -52,12 +51,9 @@ public class Animal {
         this.descricao = novosDados.descricao();
     }
 
-    public void inativar(){
-        this.ativo = false;
+    public void alterarStatus(Boolean status){
+        this.ativo = status;
     }
 
-    public void ativar(){
-        this.ativo = true;
-    }
 
 }

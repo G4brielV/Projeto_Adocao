@@ -1,6 +1,6 @@
 package com.adocao.Projeto_Adocao.Application.Auth;
 
-import com.adocao.Projeto_Adocao.Application.Usuario.ValidacaoDocumento;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
@@ -10,7 +10,6 @@ public record CadastroRequest(
         String nome,
 
         @NotBlank
-        @ValidacaoDocumento
         String cpf,
 
         @NotBlank

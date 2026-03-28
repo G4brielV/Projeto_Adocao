@@ -64,10 +64,6 @@ public class Usuario implements UserDetails {
                 .collect(Collectors.toList());
     }
 
-    public void desativar() {
-        this.ativo = false;
-    }
-
     public void atualizarSenha(String senhaCriptografada) {
         this.senha = senhaCriptografada;
     }
@@ -81,6 +77,10 @@ public class Usuario implements UserDetails {
 
     public void atualizarEndereco(Endereco endereco) {
         this.endereco = endereco;
+    }
+
+    public void alterarStatus(Boolean status){
+        this.ativo = status;
     }
 
 

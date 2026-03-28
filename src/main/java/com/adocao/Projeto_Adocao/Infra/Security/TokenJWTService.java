@@ -24,26 +24,22 @@ public class TokenJWTService {
     private String secret;
 
     public String gerarToken(Usuario usuario){
-        try {
-            Algorithm algorithm = Algorithm.HMAC256(secret);
+        Algorithm algorithm = Algorithm.HMAC256(secret);
 
-            // Converte as SimpleGrantedAuthority em uma lista de Strings
-            List<String> roles = usuario.getAuthorities()
-                    .stream()
-                    .map(GrantedAuthority::getAuthority)
-                    .toList();
+        // Converte as SimpleGrantedAuthority em uma lista de Strings
+        List<String> roles = usuario.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList();
 
-            return JWT.create()
-                    .withIssuer("Projeto_Adocao")
-                    .withSubject(usuario.getId().toString())
-                    .withClaim("userName", usuario.getNome())
-                    .withClaim("roles", roles)
-                    .withIssuedAt(Instant.now())
-                    .withExpiresAt(dataExpiracao())
-                    .sign(algorithm);
-        } catch (JWTCreationException exception) {
-            throw new RuntimeException("Erro ao gerar Token", exception);
-        }
+        return JWT.create()
+                .withIssuer("Projeto_Adocao")
+                .withSubject(usuario.getId().toString())
+                .withClaim("userName", usuario.getNome())
+                .withClaim("roles", roles)
+                .withIssuedAt(Instant.now())
+                .withExpiresAt(dataExpiracao())
+                .sign(algorithm);
     }
 
 

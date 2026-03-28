@@ -1,5 +1,6 @@
 package com.adocao.Projeto_Adocao.Application.Endereco;
 
+import com.adocao.Projeto_Adocao.Application.DTO.StatusRequestDTO;
 import com.adocao.Projeto_Adocao.Infra.Security.JWTUserData;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -16,12 +17,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class EnderecoController {
 
     private final EnderecoService enderecoService;
-
-    @GetMapping("/hello")
-    public String hello() {
-        return "Hello User";
-    }
-
 
     @Operation(
             summary = "Retorna o endereço do Usuario",
@@ -54,10 +49,9 @@ public class EnderecoController {
     }
 
     @PutMapping()
-    public ResponseEntity<EnderecoResponse> editarEndereco(
-            @RequestBody @Valid EnderecoUpdate enderecoUpdate,
-            @AuthenticationPrincipal JWTUserData jwtUserData,
-            UriComponentsBuilder uriComponentsBuilder){
+    public ResponseEntity<EnderecoResponse> editarEndereco(@RequestBody @Valid EnderecoUpdate enderecoUpdate,
+                                                           @AuthenticationPrincipal JWTUserData jwtUserData,
+                                                           UriComponentsBuilder uriComponentsBuilder){
 
         EnderecoResponse enderecoResponse = enderecoService.editarEndereco(jwtUserData, enderecoUpdate);
 
@@ -73,6 +67,14 @@ public class EnderecoController {
     /*
     * TODO:
     *  - Desativar endereço? -> Ai desativaria todos os animais do usuario tbm*/
+
+
+    @PatchMapping("/status")
+    public ResponseEntity<EnderecoResponse> alterarStatus (@AuthenticationPrincipal JWTUserData jwtUserData,
+                                               @RequestBody StatusRequestDTO request){
+        EnderecoResponse response = enderecoService.alterarStatus(jwtUserData, request.status());
+        return ResponseEntity.ok().body(response);
+    }
 
 }
 

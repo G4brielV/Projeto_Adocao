@@ -16,12 +16,21 @@ public class UsuarioMapper {
                 .build();
     }
 
-
     public CadastroResponse toLoginResponse(Usuario usuario) {
         return CadastroResponse.builder()
                 .id(usuario.getId())
                 .nome(usuario.getNome())
                 .cpf(usuario.getCpf())
+                .build();
+    }
+
+    public UsuarioMeResponse toUsuarioMeResponse(Usuario usuario) {
+        return UsuarioMeResponse.builder()
+                .nome(usuario.getNome())
+                .cpf(usuario.getCpf())
+                .email(usuario.getEmail())
+                .telefone(usuario.getTelefone())
+                .saldo(usuario.getSaldo())
                 .build();
     }
 }

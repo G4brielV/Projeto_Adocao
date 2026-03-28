@@ -44,4 +44,8 @@ public class Endereco {
         this.usuario = usuario;
     }
 
+    public void alterarStatus(Boolean status){
+        this.ativo = status;
+    }
+
 }

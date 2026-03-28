@@ -1,7 +1,8 @@
 package com.adocao.Projeto_Adocao.Application.Animal;
 
 
-import com.adocao.Projeto_Adocao.Application.Usuario.Usuario;
+import com.adocao.Projeto_Adocao.Application.DTO.StatusRequestDTO;
+import com.adocao.Projeto_Adocao.Infra.Security.JWTUserData;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -25,8 +26,10 @@ public class AnimalController {
             security = @SecurityRequirement(name = "bearerAuth")
     )
     @GetMapping()
-    public ResponseEntity<List<AnimalResponse>> listar(@AuthenticationPrincipal Usuario usuario, UriComponentsBuilder uriComponentsBuilder){
-            List<AnimalResponse> lista = animalService.getAnimalsFromUser(usuario);
+    public ResponseEntity<List<AnimalResponse>> listar(@AuthenticationPrincipal JWTUserData jwtUserData,
+                                                       UriComponentsBuilder uriComponentsBuilder){
+
+            List<AnimalResponse> lista = animalService.getAnimalsFromUser(jwtUserData);
             return ResponseEntity.ok(lista);
     }
 
@@ -34,11 +37,12 @@ public class AnimalController {
             summary = "Cadastra um animal",
             security = @SecurityRequirement(name = "bearerAuth")
     )
-    @PostMapping("/cadastro")
+    @PostMapping()
     public ResponseEntity<AnimalResponse> cadastrarAnimal(@RequestBody @Valid AnimalRequest animalRequest,
-                                                          @AuthenticationPrincipal Usuario usuario,
+                                                          @AuthenticationPrincipal JWTUserData jwtUserData,
                                                           UriComponentsBuilder uriComponentsBuilder) {
-        AnimalResponse response = animalService.cadastrarAnimal(animalRequest, usuario);
+
+        AnimalResponse response = animalService.cadastrarAnimal(jwtUserData, animalRequest);
         var uri = uriComponentsBuilder
                 .path("/endereco/{id}")  // Caminho do endpoint da class para a API
                 .buildAndExpand(response.id()) // Pegar o ID do novo usuario
@@ -46,14 +50,13 @@ public class AnimalController {
         return ResponseEntity.created(uri).body(response);
     }
 
-    @PutMapping("/editar/{animalId}")
-    public ResponseEntity<AnimalResponse> editarAnimal(
-            @PathVariable Long animalId,
-            @RequestBody @Valid AnimalUpdate animalUpdate,
-            @AuthenticationPrincipal Usuario usuario,
-            UriComponentsBuilder uriComponentsBuilder){
+    @PutMapping("/{animalId}")
+    public ResponseEntity<AnimalResponse> editarAnimal(@PathVariable Long animalId,
+                                                       @RequestBody @Valid AnimalUpdate animalUpdate,
+                                                       @AuthenticationPrincipal JWTUserData jwtUserData,
+                                                       UriComponentsBuilder uriComponentsBuilder){
 
-        AnimalResponse response = animalService.editarAnimal(animalId, usuario, animalUpdate);
+        AnimalResponse response = animalService.editarAnimal(jwtUserData, animalId, animalUpdate);
 
         var uri = uriComponentsBuilder
                 .path("/usuario/{id}")  // Caminho do endpoint da class para a API
@@ -63,31 +66,18 @@ public class AnimalController {
         return ResponseEntity.created(uri).body(response);
     }
 
-    @PutMapping("/inativar/{animalId}")
-    public ResponseEntity<?> inativarAnimal(
-            @PathVariable Long animalId,
-            @AuthenticationPrincipal Usuario usuario,
-            UriComponentsBuilder uriComponentsBuilder){
-
-        animalService.inativarAnimal(animalId, usuario);
-        var uri = uriComponentsBuilder
-                .path("/animal/{id}")
-                .buildAndExpand(animalId)
-                .toUri();
-        return ResponseEntity.ok(uri);
-    }
-
-    @PutMapping("/ativar/{animalId}")
-    public ResponseEntity<?> ativarAnimal(
-            @PathVariable Long animalId,
-            @AuthenticationPrincipal Usuario usuario,
-            UriComponentsBuilder uriComponentsBuilder){
-        animalService.ativarAnimal(animalId, usuario);
-        var uri = uriComponentsBuilder
-                .path("/animal/{id}")
-                .buildAndExpand(animalId)
-                .toUri();
-        return ResponseEntity.ok(uri);
+    /*Por como delete? ja que ele vai sumir?*/
+    @PatchMapping("/status/{animalId}")
+    public ResponseEntity<AnimalResponse> alterarStatus (@PathVariable Long animalId,
+                                               @AuthenticationPrincipal JWTUserData jwtUserData,
+                                               @RequestBody StatusRequestDTO request){
+        AnimalResponse response = animalService.alterarStatus(jwtUserData, animalId, request.status());
+        if (request.status()){
+            return ResponseEntity.ok().body(response);
+        }
+        else {
+            return ResponseEntity.noContent().build();
+        }
     }
 }
 
