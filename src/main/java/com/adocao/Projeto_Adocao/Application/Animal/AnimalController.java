@@ -19,7 +19,7 @@ import java.util.List;
 @RequestMapping("/animais")
 public class AnimalController {
 
-    private  final AnimalService animalService;
+    private final AnimalService animalService;
 
     @Operation(
             summary = "Retorna lista de todos animais do usuario",
