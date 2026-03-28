@@ -1,5 +1,5 @@
 CREATE TABLE animais (
-    id SERIAL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     ativo BOOLEAN DEFAULT TRUE,
     nome VARCHAR(255) NOT NULL,
     raca VARCHAR(50) NOT NULL,
@@ -8,6 +8,6 @@ CREATE TABLE animais (
     nascimento DATE,
     castracao BOOLEAN,
     descricao TEXT,
-    usuario_id INT NOT NULL, -- Referência ao usuario que cadastrou o animal
+    usuario_id BIGINT NOT NULL, -- Referência ao usuario que cadastrou o animal
     FOREIGN KEY (usuario_id) REFERENCES usuarios (id)
 );

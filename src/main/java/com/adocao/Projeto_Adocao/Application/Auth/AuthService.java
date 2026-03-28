@@ -39,7 +39,7 @@ public class AuthService {
     @Transactional
     public CadastroResponse cadastro(CadastroRequest cadastroRequest){
         if (usuarioRepository.findByCpf(cadastroRequest.cpf()).isPresent()) {
-            throw new BusinessRuleException("Já existe um usuário cadastrado com este e-mail/login.");
+            throw new BusinessRuleException("Já existe um usuário cadastrado com este cpf.");
         }
 
         Usuario usuario = UsuarioMapper.toUsuario(cadastroRequest);
