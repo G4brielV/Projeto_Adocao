@@ -30,7 +30,7 @@ public class AdocaoService {
                 .orElseThrow(() -> new ResourceNotFoundException("Animal com ID " + adocaoRequest.animalId() + " não encontrado."));
 
         // Disponibilidade do animal
-        if (!animal.getAtivo()) throw new BusinessRuleException("Animal indisponível para adocão");
+        if (!animal.getAtivo()) throw new BusinessRuleException("Animal indisponível para adoção");
         // O animal ja é dele?
         if (animal.getUsuario().getId().equals(usuarioLogado.getId()))  throw new BusinessRuleException("Você não pode solicitar a adoção do seu próprio animal.");
         // O usuário já tem uma solicitação pendente para este mesmo animal?
@@ -44,21 +44,6 @@ public class AdocaoService {
 
     }
 
-    @Transactional
-    public AdocaoResponse aprovarAdocao(JWTUserData jwtUserData, Long adocaoId) {
-        Adocao adocao = buscarAdocaoPendente(adocaoId);
-
-        // É o dono do animal que está logado?
-        if (!Objects.equals(jwtUserData.id(), adocao.getDonoOrigem().getId())) throw new ForbiddenOperationException("Apenas o dono do animal pode aprovar a adoção.");
-        Animal animal = adocao.getAnimal();
-        animal.alterarStatus(false);
-        adocao.setStatus(StatusAdocao.APROVADA);
-        adocaoRepository.rejeitarOutrasAdocoesPendentesDoAnimal(animal.getId(), adocao.getId());
-        animalRepository.save(animal);
-        adocaoRepository.saveAndFlush(adocao);
-
-        return AdocaoMapper.toAdocaoResponse(adocao);
-    }
 
     @Transactional(readOnly = true)
     public Page<AdocaoResponse> listarMinhasSolicitacoes(JWTUserData jwtUserData, Pageable pageable) {
@@ -98,6 +83,22 @@ public class AdocaoService {
     }
 
     @Transactional
+    public AdocaoResponse aprovarAdocao(JWTUserData jwtUserData, Long adocaoId) {
+        Adocao adocao = buscarAdocaoPendente(adocaoId);
+
+        // É o dono do animal que está logado?
+        if (!Objects.equals(jwtUserData.id(), adocao.getDonoOrigem().getId())) throw new ForbiddenOperationException("Apenas o dono do animal pode aprovar a adoção.");
+        Animal animal = adocao.getAnimal();
+        animal.alterarStatus(false);
+        adocao.setStatus(StatusAdocao.APROVADA);
+        adocaoRepository.rejeitarOutrasAdocoesPendentesDoAnimal(animal.getId(), adocao.getId());
+        animalRepository.save(animal);
+        adocaoRepository.saveAndFlush(adocao);
+
+        return AdocaoMapper.toAdocaoResponse(adocao);
+    }
+
+    @Transactional
     public AdocaoResponse rejeitarAdocao(JWTUserData jwtUserData, Long adocaoId) {
         Adocao adocao = buscarAdocaoPendente(adocaoId);
 
@@ -112,7 +113,7 @@ public class AdocaoService {
     public AdocaoResponse cancelarAdocao(JWTUserData jwtUserData, Long adocaoId) {
         Adocao adocao = buscarAdocaoPendente(adocaoId);
 
-        // É o dono do pedido da solicitação?
+        // É o dono do pedido da solicitação? (Adotante)
         if (!Objects.equals(jwtUserData.id(), adocao.getAdotante().getId())) throw new ForbiddenOperationException("Apenas o dono da solicitação pode cancelar a adoção.");
         adocao.setStatus(StatusAdocao.CANCELADA);
         adocaoRepository.saveAndFlush(adocao);
@@ -122,6 +123,7 @@ public class AdocaoService {
     private Adocao buscarAdocaoPendente(Long adocaoId) {
         Adocao adocao = adocaoRepository.findById(adocaoId)
                 .orElseThrow(() -> new ResourceNotFoundException("Adoção com ID " + adocaoId + " não encontrada."));
+
         if (!adocao.getStatus().equals(StatusAdocao.PENDENTE)) {
             throw new BusinessRuleException("Apenas adoções pendentes podem ser modificadas.");
         }

@@ -74,14 +74,14 @@ public class AdocaoController {
         return ResponseEntity.ok(response);
     }
 
-    @PatchMapping("/adocoes/{adocao_id}/aprovar")
+    @PatchMapping("/{adocao_id}/aprovar")
     public ResponseEntity<AdocaoResponse> aprovarAdocao(@PathVariable Long adocao_id,
                                                         @AuthenticationPrincipal JWTUserData jwtUserData){
         AdocaoResponse response = adocaoService.aprovarAdocao(jwtUserData, adocao_id);
         return ResponseEntity.ok(response);
     }
 
-    @PatchMapping("/adocoes/{adocao_id}/rejeitar")
+    @PatchMapping("/{adocao_id}/rejeitar")
     public ResponseEntity<AdocaoResponse> rejeitarAdocao(@PathVariable Long adocao_id,
                                                          @AuthenticationPrincipal JWTUserData jwtUserData){
         AdocaoResponse response = adocaoService.rejeitarAdocao(jwtUserData, adocao_id);
@@ -89,19 +89,10 @@ public class AdocaoController {
 
     }
 
-    @PatchMapping("/adocoes/{adocao_id}/cancelar")
+    @PatchMapping("/{adocao_id}/cancelar")
     public ResponseEntity<AdocaoResponse> cancelarAdocao(@PathVariable Long adocao_id,
                                                          @AuthenticationPrincipal JWTUserData jwtUserData){
         AdocaoResponse response = adocaoService.cancelarAdocao(jwtUserData, adocao_id);
         return ResponseEntity.ok(response);
     }
-
- /*   @PatchMapping("/adocoes/{id}/status")
-
-    @GetMapping("/me-solicitacoes")
-
-    @GetMapping("/me-animais")
-
-    @GetMapping("/{id}")
-*/
 }
