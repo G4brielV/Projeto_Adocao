@@ -1,11 +1,9 @@
 package com.adocao.Projeto_Adocao.Application.Auth;
 
-import com.adocao.Projeto_Adocao.Infra.Security.TokenJWTService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

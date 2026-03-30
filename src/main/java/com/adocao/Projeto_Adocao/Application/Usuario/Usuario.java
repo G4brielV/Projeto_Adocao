@@ -36,7 +36,6 @@ public class Usuario implements UserDetails {
     private String senha;
 
     private String telefone;
-    private BigInteger saldo;
 
     // Relacionamento com Endereco (um usuário so pode ter um endereço)
     @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)

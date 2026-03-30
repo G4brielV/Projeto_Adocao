@@ -9,7 +9,6 @@ public record UsuarioMeResponse(
         String nome,
         String cpf,
         String email,
-        String telefone,
-        BigInteger saldo
+        String telefone
 ) {
 }

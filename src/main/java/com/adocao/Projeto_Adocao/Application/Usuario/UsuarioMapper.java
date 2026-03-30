@@ -30,7 +30,6 @@ public class UsuarioMapper {
                 .cpf(usuario.getCpf())
                 .email(usuario.getEmail())
                 .telefone(usuario.getTelefone())
-                .saldo(usuario.getSaldo())
                 .build();
     }
 }
