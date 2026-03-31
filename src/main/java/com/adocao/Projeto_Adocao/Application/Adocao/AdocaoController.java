@@ -3,6 +3,7 @@ package com.adocao.Projeto_Adocao.Application.Adocao;
 import com.adocao.Projeto_Adocao.Infra.Security.JWTUserData;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 
+@Tag(name = "5. Adoção", description = "Gerenciamento de adoções")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/adocoes")

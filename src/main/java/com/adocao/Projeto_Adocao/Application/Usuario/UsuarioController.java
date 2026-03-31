@@ -5,12 +5,14 @@ import com.adocao.Projeto_Adocao.Application.DTO.StatusRequestDTO;
 import com.adocao.Projeto_Adocao.Infra.Security.JWTUserData;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "2. Usuários", description = "Gerenciamento de usuários")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/usuarios")

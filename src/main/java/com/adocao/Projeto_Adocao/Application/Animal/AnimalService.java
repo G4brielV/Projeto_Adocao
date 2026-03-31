@@ -6,11 +6,10 @@ import com.adocao.Projeto_Adocao.Infra.Exception.ForbiddenOperationException;
 import com.adocao.Projeto_Adocao.Infra.Exception.ResourceNotFoundException;
 import com.adocao.Projeto_Adocao.Infra.Security.JWTUserData;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -19,12 +18,14 @@ public class AnimalService {
     private final AnimalRepository animalRepository;
     private final UsuarioRepository usuarioRepository;
 
-    public List<AnimalResponse> getAnimalsFromUser(JWTUserData jwtUserData) {
-        return animalRepository
-                .findAllByAtivoTrueAndUsuarioId(jwtUserData.id())
-                .stream()
-                .map(AnimalMapper::toAnimalResponse)
-                .toList();
+    public Page<AnimalResponse> buscarMeusAnimais(JWTUserData jwtUserData, Pageable pageable) {
+        return animalRepository.findAllByUsuarioId(jwtUserData.id(), pageable)
+                .map(AnimalMapper::toAnimalResponse);
+    }
+
+    public Page<AnimalResponse> buscarAnimaisDisponiveis(Porte porte, Boolean castracao, String raca, Pageable pageable) {
+        return animalRepository.findAnimaisDisponiveisComFiltros(porte, castracao, raca, pageable)
+                .map(AnimalMapper::toAnimalResponse);
     }
 
     @Transactional

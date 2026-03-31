@@ -1,6 +1,7 @@
 package com.adocao.Projeto_Adocao.Application.Auth;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-
+@Tag(name = "1. Autenticação", description = "Endpoints para login e cadastro de usuários")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/auth")

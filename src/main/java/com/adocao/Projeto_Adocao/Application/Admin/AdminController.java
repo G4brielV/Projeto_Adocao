@@ -18,7 +18,7 @@ public class AdminController {
     private final EnderecoRepository enderecoRepository;
 
     @Operation(
-            summary = "Endpoint de teste para administradores",
+            summary = "Endpoint de teste de ROLE para administradores ",
             security = @SecurityRequirement(name = "bearerAuth")
     )
     @GetMapping()
