@@ -42,6 +42,7 @@ public class Usuario implements UserDetails {
     private Endereco endereco;
 
     // Relacionamento com Animal (um usuário pode ter vários animais)
+    @Builder.Default
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Animal> animais = new ArrayList<>();
 

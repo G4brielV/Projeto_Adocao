@@ -44,8 +44,8 @@ public class AnimalController {
 
         AnimalResponse response = animalService.cadastrarAnimal(jwtUserData, animalRequest);
         var uri = uriComponentsBuilder
-                .path("/endereco/{id}")  // Caminho do endpoint da class para a API
-                .buildAndExpand(response.id()) // Pegar o ID do novo usuario
+                .path("/animais/{id}")
+                .buildAndExpand(response.id())
                 .toUri();
         return ResponseEntity.created(uri).body(response);
     }
@@ -59,8 +59,8 @@ public class AnimalController {
         AnimalResponse response = animalService.editarAnimal(jwtUserData, animalId, animalUpdate);
 
         var uri = uriComponentsBuilder
-                .path("/usuario/{id}")  // Caminho do endpoint da class para a API
-                .buildAndExpand(response.id()) // Pegar o ID do novo usuario
+                .path("/animais/{id}")
+                .buildAndExpand(response.id())
                 .toUri();
 
         return ResponseEntity.created(uri).body(response);

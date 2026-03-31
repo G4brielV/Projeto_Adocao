@@ -19,7 +19,7 @@ public class AuthController {
     private final AuthService authService;
 
     @Operation(
-            summary = "Login de usuario"
+            summary = "Login de usuário"
     )
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest loginRequest){
@@ -28,17 +28,23 @@ public class AuthController {
     }
 
     @Operation(
-            summary = "Cadastra um novo usuario"
+            summary = "Cadastra um novo usuário"
     )
     @PostMapping("/cadastro")
     public ResponseEntity<CadastroResponse> cadastro(@RequestBody @Valid CadastroRequest cadastroRequest, UriComponentsBuilder uriComponentsBuilder){
         CadastroResponse response = authService.cadastro(cadastroRequest);
 
         var uri = uriComponentsBuilder
-                .path("/usuario/{id}")  // Caminho do endpoint da class para a API
-                .buildAndExpand(response.id()) // Pegar o ID do novo usuario
+                .path("/usuarios/{id}")
+                .buildAndExpand(response.id())
                 .toUri();
 
         return ResponseEntity.created(uri).body(response);
+    }
+
+    @PostMapping("/reativar")
+    public ResponseEntity<CadastroResponse> reativarConta(@RequestBody LoginRequest loginRequest) {
+        CadastroResponse response = authService.reativarConta(loginRequest);
+        return ResponseEntity.ok(response);
     }
 }

@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc // Simular as chamadas HTTP
-@ActiveProfiles("test") // Ler o application-test.properties
+@ActiveProfiles("test") // Ler o application-test.yaml
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @RequiredArgsConstructor
 class AdocaoControllerIT {

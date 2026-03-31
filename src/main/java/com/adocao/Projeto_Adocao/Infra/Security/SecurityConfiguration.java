@@ -38,11 +38,13 @@ public class SecurityConfiguration {
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/swagger-ui.html",
-                                "/api-docs/**"
+                                "/api-docs/**",
+                                "/swagger/**"
                         ).permitAll()
                         // Endpoint de Cadastro e Login
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/cadastro").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/reativar").permitAll()
                         .requestMatchers(HttpMethod.GET, "/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )

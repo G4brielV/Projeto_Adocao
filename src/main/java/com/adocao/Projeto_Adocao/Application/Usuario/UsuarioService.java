@@ -23,21 +23,14 @@ public class UsuarioService{
 
 
     @Transactional
-    public void alterarStatus(JWTUserData jwtUserData, Boolean status) {
+    public void alterarStatus(JWTUserData jwtUserData) {
         Usuario usuario = usuarioRepository.findById(jwtUserData.id())
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado com o ID: " + jwtUserData.id()));
-        usuario.alterarStatus(status);
-
-        if(!status) {
-            if (usuario.getEndereco() != null) {
-                usuario.getEndereco().alterarStatus(false);
-            }
-            usuarioRepository.save(usuario);
-            // Problema de N+1 com For each, com a query direto no banco melhora um pouco
-            animalRepository.desativarTodosPorUsuarioId(jwtUserData.id());
-        }
-
-
+        usuario.alterarStatus(false);
+        if (usuario.getEndereco() != null) usuario.getEndereco().alterarStatus(false);
+        // Problema de N+1 com For each, com a query direto no banco melhora um pouco
+        animalRepository.desativarTodosPorUsuarioId(jwtUserData.id());
+        usuarioRepository.save(usuario);
 
     }
 }

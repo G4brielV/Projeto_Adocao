@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    # Configurando o Testcontainer (tc)
+    url: jdbc:tc:postgresql:15-alpine:///projeto_adocao_testdb
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+  flyway:
+    enabled: true
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: validate
+
+logging:
+  level:
+    org.springframework.jdbc.core.JdbcTemplate: DEBUG

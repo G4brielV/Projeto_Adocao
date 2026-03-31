@@ -1,8 +1,5 @@
 package com.adocao.Projeto_Adocao.Application.Adocao;
 
-import com.adocao.Projeto_Adocao.Application.Animal.Animal;
-import com.adocao.Projeto_Adocao.Application.Animal.AnimalRepository;
-import com.adocao.Projeto_Adocao.Application.Animal.Porte;
 import com.adocao.Projeto_Adocao.Application.Usuario.Roles.Role;
 import com.adocao.Projeto_Adocao.Application.Usuario.Roles.RoleRepository;
 import com.adocao.Projeto_Adocao.Application.Usuario.Usuario;
@@ -20,18 +17,13 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDate;
-import java.util.List;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @SpringBootTest
 @AutoConfigureMockMvc // Simular as chamadas HTTP
-@ActiveProfiles("test") // Ler o application-test.properties
+@ActiveProfiles("test") // Ler o application-test.yaml
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @RequiredArgsConstructor
 class AdminControllerIT {

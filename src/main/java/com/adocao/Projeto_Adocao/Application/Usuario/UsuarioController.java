@@ -3,6 +3,8 @@ package com.adocao.Projeto_Adocao.Application.Usuario;
 
 import com.adocao.Projeto_Adocao.Application.DTO.StatusRequestDTO;
 import com.adocao.Projeto_Adocao.Infra.Security.JWTUserData;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,6 +18,10 @@ public class UsuarioController {
 
     private final UsuarioService usuarioService;
 
+    @Operation(
+            summary = "Retorna os dados do usuário autenticado",
+            security = @SecurityRequirement(name = "bearerAuth")
+    )
     @GetMapping("/me")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<UsuarioMeResponse> findUserById(@AuthenticationPrincipal JWTUserData jwtUserData){
@@ -23,16 +29,15 @@ public class UsuarioController {
         return ResponseEntity.ok().body(user);
     }
 
+    @Operation(
+            summary = "Desativa a conta do usuário autenticado efeito em cascata para seu endereço e animais cadastrados",
+            security = @SecurityRequirement(name = "bearerAuth")
+    )
     @PatchMapping("/status")
-    public ResponseEntity<Void> alterarStatus (@AuthenticationPrincipal JWTUserData jwtUserData,
-                                               @RequestBody StatusRequestDTO request){
-        usuarioService.alterarStatus(jwtUserData, request.status());
-        if (request.status()){
-            return ResponseEntity.ok().build();
-        }
-        else {
-            return ResponseEntity.noContent().build();
-        }
+    public ResponseEntity<Void> desativarConta (@AuthenticationPrincipal JWTUserData jwtUserData){
+        usuarioService.alterarStatus(jwtUserData);
+        return ResponseEntity.noContent().build();
+
     }
 
 
