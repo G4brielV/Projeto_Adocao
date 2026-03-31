@@ -155,7 +155,7 @@ class AdocaoControllerIT {
     }
 
     @Nested
-    @DisplayName("GET /adocoes/minhas-solicitacoes")
+    @DisplayName("GET /adocoes/meus-animais")
     class GetSolicitacoesRecebidas {
         @BeforeEach
         void setUp() {
