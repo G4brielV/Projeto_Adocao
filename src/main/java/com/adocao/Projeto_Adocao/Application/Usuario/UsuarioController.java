@@ -33,8 +33,8 @@ public class UsuarioController {
             summary = "Desativa a conta do usuário autenticado efeito em cascata para seu endereço e animais cadastrados",
             security = @SecurityRequirement(name = "bearerAuth")
     )
-    @PatchMapping("/status")
-    public ResponseEntity<Void> desativarConta (@AuthenticationPrincipal JWTUserData jwtUserData){
+    @PostMapping ("/inativar")
+    public ResponseEntity<Void> inativarConta (@AuthenticationPrincipal JWTUserData jwtUserData){
         usuarioService.alterarStatus(jwtUserData);
         return ResponseEntity.noContent().build();
 

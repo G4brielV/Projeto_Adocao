@@ -1,4 +1,4 @@
-package com.adocao.Projeto_Adocao.Application.Adocao;
+package com.adocao.Projeto_Adocao.Application.Admin;
 
 import com.adocao.Projeto_Adocao.Application.Usuario.Roles.Role;
 import com.adocao.Projeto_Adocao.Application.Usuario.Roles.RoleRepository;
@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -79,25 +80,29 @@ class AdminControllerIT {
         tokenUsuario = tokenJWTService.gerarToken(usuario);
     }
 
+    @Nested
+    @DisplayName("GET /admin")
+    class GetAdminEndpoint {
 
-    @Test
-    @DisplayName("Deve retornar 200 OK a chamada com a role ADMIN")
-    void helloAdmin_ComSucesso() throws Exception {
-        // token do ADMIN
-        mockMvc.perform(get("/admin")
-                        .header("Authorization", "Bearer " + tokenAdmin)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-    }
+        @Test
+        @DisplayName("Deve retornar 200 OK a chamada com a role ADMIN")
+        void helloAdmin_ComSucesso() throws Exception {
+            // token do ADMIN
+            mockMvc.perform(get("/admin")
+                            .header("Authorization", "Bearer " + tokenAdmin)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk());
+        }
 
-    @Test
-    @DisplayName("Deve retornar 403 Forbidden ao tentar acessar endpoint admin sem a role ADMIN")
-    void helloAdmin_DeveRetornarForbidden_QuandoUsuario() throws Exception {
-        // token do DONO
-        mockMvc.perform(get("/admin")
-                        .header("Authorization", "Bearer " + tokenUsuario)
-                        .contentType(MediaType.APPLICATION_JSON))
-                // Aqui garantimos que a exceção virou o código HTTP correto!
-                .andExpect(status().isForbidden());
+        @Test
+        @DisplayName("Deve retornar 403 Forbidden ao tentar acessar endpoint admin sem a role ADMIN")
+        void helloAdmin_DeveRetornarForbidden_QuandoUsuario() throws Exception {
+            // token do DONO
+            mockMvc.perform(get("/admin")
+                            .header("Authorization", "Bearer " + tokenUsuario)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    // Aqui garantimos que a exceção virou o código HTTP correto!
+                    .andExpect(status().isForbidden());
+        }
     }
 }

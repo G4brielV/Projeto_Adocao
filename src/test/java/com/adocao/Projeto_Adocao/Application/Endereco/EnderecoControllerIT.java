@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -72,26 +73,42 @@ class EnderecoControllerIT {
         tokenUsuario = tokenJWTService.gerarToken(usuario);
     }
 
-    @Test
-    @DisplayName("Deve retornar 200 OK e desativar o endereço do usuário no banco")
-    void alterarStatus_DeveDesativarEndereco_QuandoStatusForFalse() throws Exception {
+    @Nested
+    @DisplayName("PATCH /enderecos/status")
+    class PatchEnderecoEndpoint {
+        @Test
+        @DisplayName("Deve retornar 200 OK e desativar o endereço do usuário no banco")
+        void alterarStatus_DeveDesativarEndereco_QuandoStatusForFalse() throws Exception {
 
-        StatusRequestDTO request = new StatusRequestDTO(false);
-        String jsonBody = objectMapper.writeValueAsString(request);
+            StatusRequestDTO request = new StatusRequestDTO(false);
+            String jsonBody = objectMapper.writeValueAsString(request);
 
-        mockMvc.perform(patch("/enderecos/status")
-                        .header("Authorization", "Bearer " + tokenUsuario)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonBody))
-                .andDo(print())
+            mockMvc.perform(patch("/enderecos/status")
+                            .header("Authorization", "Bearer " + tokenUsuario)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(jsonBody))
+                    .andDo(print())
 
-                // Assert HTTP: Retorna 200 e os dados do endereço
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.estado").value("PE"))
-                .andExpect(jsonPath("$.rua").value("Rua da Aurora"));
+                    // Assert HTTP: Retorna 200 e os dados do endereço
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.estado").value("PE"))
+                    .andExpect(jsonPath("$.rua").value("Rua da Aurora"));
 
-        // Assert DB: Garantia final de que o banco de dados refletiu a mudança
-        Endereco enderecoAtualizado = enderecoRepository.findById(endereco.getId()).get();
-        assertFalse(enderecoAtualizado.getAtivo(), "O endereço deveria estar inativo no banco de dados.");
+            // Assert DB: Garantia final de que o banco de dados refletiu a mudança
+            Endereco enderecoAtualizado = enderecoRepository.findById(endereco.getId()).get();
+            assertFalse(enderecoAtualizado.getAtivo(), "O endereço deveria estar inativo no banco de dados.");
+        }
+
+        @Test
+        @DisplayName("Deve retornar 403 Forbidden se o usuário não enviar o token JWT")
+        void alterarStatus_DeveRetornarForbidden_QuandoSemToken() throws Exception {
+            StatusRequestDTO request = new StatusRequestDTO(false);
+            String jsonBody = objectMapper.writeValueAsString(request);
+
+            mockMvc.perform(patch("/enderecos/status")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(jsonBody))
+                    .andExpect(status().isForbidden());
+        }
     }
 }

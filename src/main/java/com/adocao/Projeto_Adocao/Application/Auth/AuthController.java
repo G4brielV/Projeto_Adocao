@@ -42,6 +42,9 @@ public class AuthController {
         return ResponseEntity.created(uri).body(response);
     }
 
+    @Operation(
+            summary = "Reativar conta de usuário ja cadastrado"
+    )
     @PostMapping("/reativar")
     public ResponseEntity<CadastroResponse> reativarConta(@RequestBody LoginRequest loginRequest) {
         CadastroResponse response = authService.reativarConta(loginRequest);
