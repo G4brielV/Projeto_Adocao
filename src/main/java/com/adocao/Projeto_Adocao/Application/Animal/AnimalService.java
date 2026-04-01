@@ -60,7 +60,6 @@ public class AnimalService {
 
     }
 
-    /*TODO: Verifica se o animal pertence ao usuario*/
     private void verificarPermicao(Animal animal, Long usuarioId){
         if (!animal.getUsuario().getId().equals(usuarioId)) {
             throw new ForbiddenOperationException("Você não tem permissão para modificar os dados deste animal.");
